@@ -1,0 +1,31 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: stock-apigate-way
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: stock-cal-api
+          uri: lb://stock-cal-api
+          predicates:
+            - Path=/calc/**
+        - id: stock-price-apii
+          uri: lb://stock-price-apii
+          predicates:
+            - Path=/price/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      # Eureka server should be running on a **separate port**, usually 8761 or custom (not 1111 unless you're using the same port)
+      # Assuming Eureka server runs on port 8761 (default):
+      defaultZone: http://localhost:8761/eureka
